@@ -24,6 +24,17 @@ public abstract class BaseEntity {
         return id;
     }
 
+    @PrePersist
+    public void prePersist() {
+        setCreated(Instant.now());
+        setUpdated(Instant.now());
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        setUpdated(Instant.now());
+    }
+
     public BaseEntity setId(Long id) {
         this.id = id;
         return this;
