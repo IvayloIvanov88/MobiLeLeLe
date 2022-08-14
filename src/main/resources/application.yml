@@ -1,41 +1,43 @@
-spring:
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: root
-    password: *******
-    url: jdbc:mysql://localhost:3306/mobilelele?createDatabaseIfNotExist=true&amp
-
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-      dialect: org.hibernate.dialect.MySQL8Dialect
-      format_sql: true
-      show_sql: true
-      use_sql_comments: true
-  main:
-    allow-bean-definition-overriding: true
-
 --server:
-  port: 8181
+    port: 8181
 info:
-  app:
-    description: sample application
-    name: mobilelele
-    version: 1.0.0
+    app:
+        description: sample application
+        name: MyCarMarket
+        version: 1.0.0
 logging:
-  level:
-    blog: WARN
-    org: WARN
-    org.hibernate.SQL: DEBUG
+    level:
+        blog: WARN
+        org: WARN
+        org.hibernate.SQL: DEBUG
 management:
-  endpoint:
-    health:
-      show-details: always
-  endpoints:
-    web:
-      exposure:
-        include: info, health, httptrace, metrics, threaddump, heapdump, shutdown,
-          beans
-  trace:
-    http:
-      enabled: true
+    endpoint:
+        health:
+            show-details: always
+    endpoints:
+        web:
+            exposure:
+                include: info, health, httptrace, metrics, threaddump, heapdump, shutdown,
+                    beans
+    trace:
+        http:
+            enabled: true
+spring:
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        password: ******!
+        url: jdbc:mysql://localhost:3306/car_market?createDatabaseIfNotExist=true&amp
+        username: root
+    jpa:
+        hibernate:
+            ddl-auto: update
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            format_sql: true
+            show_sql: true
+            use_sql_comments: true
+    main:
+        allow-bean-definition-overriding: true
+    mvc:
+        hiddenmethod:
+            filter:
+                enabled: true

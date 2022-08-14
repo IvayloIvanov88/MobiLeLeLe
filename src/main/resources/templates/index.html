@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>MobiLeLeLe</title>
+    <title>My car market</title>
     <link rel="stylesheet" href="/css/reset-css.css"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/css/main.css"/>
@@ -15,7 +15,8 @@
 <div th:replace="fragments/navbar::navbar"/></div>
 
 <div class="container-fluid">
-	<h5 class="text-center text-white mt-5">Welcome to MobiLeLeLe, <span th:text="${@currentUser.getUserName()}"></span>!</h5>
+	<h3 class="text-center text-white mt-5">Welcome to my car market,
+		<span th:text="${@currentUser.getUserName()}"></span>!</h3>
 </div>
 
 <div>
