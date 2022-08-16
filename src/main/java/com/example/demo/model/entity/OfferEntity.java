@@ -17,7 +17,7 @@ public class OfferEntity extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    private int mileage;
+    private double mileage;
 
     private BigDecimal price;
 
@@ -53,11 +53,11 @@ public class OfferEntity extends BaseEntity {
         return this;
     }
 
-    public int getMileage() {
+    public double getMileage() {
         return mileage;
     }
 
-    public OfferEntity setMileage(int mileage) {
+    public OfferEntity setMileage(double mileage) {
         this.mileage = mileage;
         return this;
     }
