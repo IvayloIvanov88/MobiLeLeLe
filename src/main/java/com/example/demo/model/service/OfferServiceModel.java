@@ -1,7 +1,5 @@
 package com.example.demo.model.service;
 
-import com.example.demo.model.entity.ModelEntity;
-import com.example.demo.model.entity.UserEntity;
 import com.example.demo.model.entity.enums.EngineEnum;
 import com.example.demo.model.entity.enums.TransmissionEnum;
 import com.example.demo.model.validation.YearInPastOrPresent;

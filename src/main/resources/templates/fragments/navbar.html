@@ -46,16 +46,15 @@
 				</li>
 				<li class="nav-item" th:if="${@currentUser.isLoggedIn()}">
 
-					<!--TODO --------------------------------------------------------------- fix CSS       -->
 
 					<form method="POST"
 					      th:action="@{/users/logout}"
 					      class="navbar-form mr-auto col-12 justify-content-between">
 
-						<div class="form-inline my-2 my-lg-0 border px-3">
+						<div class="form-inline my-2 my-lg-0 ">
 							<div class="logged-user"
 							     th:text="${@currentUser.userName}"></div>
-							<input type="submit" class="btn nav-link" value="Logout">Logout</input>
+							<input type="submit" class="button" value="Logout"></input>
 						</div>
 					</form>
 				</li>

@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface OfferService {
 
+    OfferSummaryViewModel getOfferById(Long id);
+
     List<OfferSummaryViewModel> getAllOffers();
 
     long save(OfferServiceModel model);

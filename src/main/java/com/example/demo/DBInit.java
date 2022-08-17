@@ -56,7 +56,7 @@ public class DBInit implements CommandLineRunner {
 //        initGolf5(vwBrand);
 //        initTaycan(porscheBrand);
 //
-//        createFiestaOffer(initFiesta(fordBrand));
+////        createFiestaOffer(initFiesta(fordBrand));
 //
 //        initUsers();
 //
@@ -103,7 +103,8 @@ public class DBInit implements CommandLineRunner {
                 .setYear(2007)
                 .setDescription("Карана е от немска баба, бастуна седи още в багажника, само до църквата е ходила всяка неделя.")
                 .setTransmission(TransmissionEnum.AUTOMATIC)
-                .setModel(modelEntity);
+                .setModel(modelEntity)
+                .setSeller(userRepository.findByUsername("Tedi").orElse(null));
 
         offerRepository.save(fiestaOffer);
     }

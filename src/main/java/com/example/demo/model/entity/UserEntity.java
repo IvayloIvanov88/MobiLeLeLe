@@ -3,6 +3,8 @@ package com.example.demo.model.entity;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -29,7 +31,7 @@ public class UserEntity extends BaseEntity {
     private String imageUrl;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<UserRoleEntity> userRoles;
+    private List<UserRoleEntity> userRoles = new ArrayList<>();
 
     public String getUsername() {
         return username;
@@ -39,6 +41,7 @@ public class UserEntity extends BaseEntity {
         this.username = username;
         return this;
     }
+
 
     public String getPassword() {
         return password;

@@ -14,8 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OfferServiceImpl implements OfferService {
@@ -35,17 +35,13 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public OfferSummaryViewModel getOfferById(Long id) {
+        OfferEntity offer = offerRepository.findById(id).get();
+        return map(offer);
+    }
+    @Override
     public List<OfferSummaryViewModel> getAllOffers() {
-        //todo
-        List<OfferSummaryViewModel> result = new ArrayList<>();
-//        List<OfferEntity> allOffers = offerRepository.findAll();
-//
-//        allOffers.forEach(oe -> {
-//            OfferEntity offerEntity = new
-//
-//        });
-
-        return result;
+        return offerRepository.findAll().stream().map(this::map).collect(Collectors.toList());
     }
 
     @Override
@@ -74,6 +70,18 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.save(offer);
     }
 
+
+
+        private OfferEntity asNewEntity(OfferServiceModel model) {
+        OfferEntity offerEntity = new OfferEntity();
+        modelMapper.map(model, offerEntity);
+        offerEntity.setId(null);
+
+        offerEntity.setModel(modelRepository.findById(model.getModelId()).orElseThrow());
+        offerEntity.setSeller(userRepository.findByUsername(currentUser.getUserName()).orElseThrow());
+        return offerEntity;
+    }
+
     private OfferEntity setOffer(OfferEntity offer, OfferUpdateServiceModel serviceModel) {
         return (OfferEntity) offer.setPrice(serviceModel.getPrice())
                 .setDescription(serviceModel.getDescription())
@@ -85,13 +93,10 @@ public class OfferServiceImpl implements OfferService {
                 .setUpdated(Instant.now());
     }
 
-        private OfferEntity asNewEntity(OfferServiceModel model) {
-        OfferEntity offerEntity = new OfferEntity();
-        modelMapper.map(model, offerEntity);
-        offerEntity.setId(null);
-
-        offerEntity.setModel(modelRepository.findById(model.getModelId()).orElseThrow());
-        offerEntity.setSeller(userRepository.findByUsername(currentUser.getUserName()).orElseThrow());
-        return offerEntity;
+    private OfferSummaryViewModel map(OfferEntity offer) {
+        return modelMapper.map(offer, OfferSummaryViewModel.class)
+                .setModel(offer.getModel().getName())
+                .setBrand(offer.getModel().getBrand().getName())
+                .setSeller(offer.getSeller().getFirstName() + " " + offer.getSeller().getLastName());
     }
 }
