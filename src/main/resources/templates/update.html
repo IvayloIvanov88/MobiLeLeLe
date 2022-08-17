@@ -9,7 +9,7 @@
 <div th:replace="fragments/navbar :: navbar">Navbar</div>
 
 <div class="container">
-	<h2 class="text-center text-white">Update Offer</h2>
+	<h2  class="text-center text-white">Update Offer</h2>
 	<form th:method="patch"
 	      th:action="@{/offers/{id}/update(id = *{id})}"
 	      th:object="${offerModel}"

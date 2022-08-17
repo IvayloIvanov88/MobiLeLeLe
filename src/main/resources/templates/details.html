@@ -35,7 +35,7 @@
 					<div class="card-text">Price: <span th:text="*{price}"></span></div>
 					<div class="card-text">Engine: <span th:text="*{engine}"></span></div>
 					<div class="card-text">Transmission type: <span th:text="*{transmission}"></span></div>
-					<div class="card-text">Offer created: <span ></span></div>
+					<div class="card-text">Offer created: <span></span></div>
 					<div class="card-text">Offer modified: <span th:text="*{updated}"></span></div>
 					<div class="card-text"><span th:text="'Seller: ' + *{seller}">Seller-First and Last name</span>
 					</div>
@@ -45,12 +45,16 @@
 			<div class="card-body">
 				<div class="row">
 					<form th:action="@{/offers/offer/{id}/update (id = ${id})}"
-					      th:method="get">
+					      th:method="get"
+					      th:if="${@currentUser.isLoggedIn}"
+						th:unless="${not @currentUser.isAdmin}">
+
 						<input type="submit" class="card-link" value="Update"/>
 					</form>
 
 					<form th:action="@{/offers/offer/{id}/(id=${id})}"
-					      th:method="delete">
+					      th:method="delete"
+					      th:unless="${not @currentUser.isAdmin}">
 						<input class="card-link" type="submit" value="Delete">
 					</form>
 				</div>

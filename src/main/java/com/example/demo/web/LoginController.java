@@ -2,6 +2,8 @@ package com.example.demo.web;
 
 import com.example.demo.model.service.UserLoginServiceModel;
 import com.example.demo.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +18,7 @@ import javax.validation.Valid;
 public class LoginController {
 
     private final UserService userService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     public LoginController(UserService userService) {
@@ -37,6 +40,11 @@ public class LoginController {
     @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginServiceModel userModel,
                         BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        boolean hasErrors = bindingResult.hasErrors();
+        LOGGER.info("User tried to login. User with username {} tried to login. Success {}?",
+                userModel.getUsername(),
+                !hasErrors);
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userModel", userModel);

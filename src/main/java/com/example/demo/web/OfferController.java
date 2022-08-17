@@ -99,7 +99,7 @@ public class OfferController {
         return "update";
     }
 
-    @PatchMapping("/offer/{id}/update")
+    @PatchMapping("/{id}/update")
     public String updateOffer(@PathVariable Long id,
                               @Valid OfferUpdateBindingModel offerModel,
                               BindingResult bindingResult,
