@@ -7,7 +7,6 @@ import com.example.demo.model.view.OfferSummaryViewModel;
 import com.example.demo.repository.ModelRepository;
 import com.example.demo.repository.OfferRepository;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.security.CurrentUser;
 import com.example.demo.service.OfferService;
 import com.example.demo.web.NotFoundObjectException;
 import org.modelmapper.ModelMapper;
@@ -20,14 +19,12 @@ import java.util.stream.Collectors;
 @Service
 public class OfferServiceImpl implements OfferService {
 
-    private final CurrentUser currentUser;
     private final OfferRepository offerRepository;
     private final UserRepository userRepository;
     private final ModelRepository modelRepository;
     private final ModelMapper modelMapper;
 
-    public OfferServiceImpl(CurrentUser currentUser, OfferRepository offerRepository, UserRepository userRepository, ModelRepository modelRepository, ModelMapper modelMapper) {
-        this.currentUser = currentUser;
+    public OfferServiceImpl( OfferRepository offerRepository, UserRepository userRepository, ModelRepository modelRepository, ModelMapper modelMapper) {
         this.offerRepository = offerRepository;
         this.userRepository = userRepository;
         this.modelRepository = modelRepository;
@@ -78,7 +75,8 @@ public class OfferServiceImpl implements OfferService {
         offerEntity.setId(null);
 
         offerEntity.setModel(modelRepository.findById(model.getModelId()).orElseThrow());
-        offerEntity.setSeller(userRepository.findByUsername(currentUser.getUserName()).orElseThrow());
+        //todo fix it with security
+//        offerEntity.setSeller(userRepository.findByUsername(currentUser.getUserName()).orElseThrow());
         return offerEntity;
     }
 

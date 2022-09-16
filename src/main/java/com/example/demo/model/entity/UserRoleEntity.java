@@ -14,6 +14,7 @@ public class UserRoleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
     public Long getId() {
@@ -33,4 +34,5 @@ public class UserRoleEntity {
         this.role = role;
         return this;
     }
+
 }

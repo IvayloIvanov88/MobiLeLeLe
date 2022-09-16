@@ -5,6 +5,7 @@ import com.example.demo.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +38,24 @@ public class LoginController {
         return "auth-login";
     }
 
+    @PostMapping("/users/login-error")
+    public String onFailedLogin(
+            @ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) String userName,
+            RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addFlashAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY, userName);
+        redirectAttributes.addFlashAttribute("bad_credentials", true);
+
+        return "redirect:/users/login";
+    }
+    //todo не се използва този логин ами на Spring security имплементацията
     @PostMapping("/users/login")
     public String login(@Valid @ModelAttribute UserLoginServiceModel userModel,
                         BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         boolean hasErrors = bindingResult.hasErrors();
         LOGGER.info("User tried to login. User with username {} tried to login. Success {}?",
-                userModel.getUsername(),
-                !hasErrors);
+                userModel.getUsername(), !hasErrors);
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("userModel", userModel);
@@ -52,7 +63,7 @@ public class LoginController {
             return "redirect:/users/login";
         }
         if (userService.authenticate(userModel.getUsername(), userModel.getPassword())) {
-            userService.loginUser(userModel.getUsername());
+            userService.login(userModel);
             return "redirect:/";
         } else {
             redirectAttributes.addFlashAttribute("userModel", userModel);
@@ -62,9 +73,4 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/users/logout")
-    public String logout() {
-        userService.logOutCurrentUser();
-        return "redirect:/";
-    }
 }

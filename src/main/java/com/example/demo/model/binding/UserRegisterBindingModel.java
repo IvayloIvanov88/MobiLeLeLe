@@ -4,6 +4,7 @@ package com.example.demo.model.binding;
 import com.example.demo.model.validation.PasswordMatcher;
 import com.example.demo.model.validation.UniqueUsername;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 @PasswordMatcher
@@ -22,6 +23,10 @@ public class UserRegisterBindingModel {
     @UniqueUsername
     private String username;
 
+    @NotNull
+    @Email
+    @Size(min = 3, message ="Email is too short")
+    private String email;
     @NotNull
     @Size(min = 4, max = 20)
     private String password;
@@ -72,6 +77,15 @@ public class UserRegisterBindingModel {
 
     public UserRegisterBindingModel setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserRegisterBindingModel setEmail(String email) {
+        this.email = email;
         return this;
     }
 }

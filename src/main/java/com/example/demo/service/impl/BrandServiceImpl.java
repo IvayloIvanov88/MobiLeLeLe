@@ -20,7 +20,6 @@ public class BrandServiceImpl implements BrandService {
     private final ModelRepository modelRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public BrandServiceImpl(ModelRepository modelRepository, ModelMapper modelMapper) {
         this.modelRepository = modelRepository;
         this.modelMapper = modelMapper;
@@ -35,7 +34,7 @@ public class BrandServiceImpl implements BrandService {
         allModels.forEach(me -> {
             BrandEntity brandEntity = me.getBrand();
             Optional<BrandViewModel> brandViewModelOpt = findByName(result, brandEntity.getName());
-            if (!brandViewModelOpt.isPresent()) {
+            if (brandViewModelOpt.isEmpty()) {
                 BrandViewModel newBrandViewModel = new BrandViewModel();
                 modelMapper.map(brandEntity, newBrandViewModel);
                 result.add(newBrandViewModel);

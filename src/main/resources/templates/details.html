@@ -1,20 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-	<meta charset="UTF-8">
-	<title>My car market</title>
-	<link rel="stylesheet" href="/css/reset-css.css"/>
-	<link rel="stylesheet" href="/css/bootstrap.min.css"/>
-	<link rel="stylesheet" type="text/css" href="/css/main.css"/>
-	<script src="/js/jquery-3.5.1.slim.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
-</head>
+
+<head th:replace="fragments/head::head">head</head>
 
 <body>
 
-<div th:replace="fragments/navbar::navbar"/>
-</div>
+<div th:replace="fragments/navbar::navbar"/>navbar</div>
 
 
 <div class="container-fluid">
@@ -46,15 +39,14 @@
 				<div class="row">
 					<form th:action="@{/offers/offer/{id}/update (id = ${id})}"
 					      th:method="get"
-					      th:if="${@currentUser.isLoggedIn}"
-						th:unless="${not @currentUser.isAdmin}">
+					      sec:authorize="isAuthenticated()">
 
 						<input type="submit" class="card-link" value="Update"/>
 					</form>
 
 					<form th:action="@{/offers/offer/{id}/(id=${id})}"
 					      th:method="delete"
-					      th:unless="${not @currentUser.isAdmin}">
+					      sec:authorize="hasRole('ADMIN')">
 						<input class="card-link" type="submit" value="Delete">
 					</form>
 				</div>

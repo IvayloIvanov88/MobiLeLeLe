@@ -7,32 +7,97 @@ import com.example.demo.model.service.UserLoginServiceModel;
 import com.example.demo.model.service.UserRegisterServiceModel;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UserRoleRepository;
-import com.example.demo.security.CurrentUser;
 import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final CurrentUser currentUser;
     private final UserRoleRepository userRoleRepository;
 
-    @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, CurrentUser currentUser, UserRoleRepository userRoleRepository) {
-        this.passwordEncoder = passwordEncoder;
+    private final UserDetailsService appUserDetailsService;
+    private final ModelMapper modelMapper;
+    private final String adminPass;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           UserRoleRepository userRoleRepository,
+                           PasswordEncoder passwordEncoder,
+                           UserDetailsService appUserDetailsService,
+                           ModelMapper modelMapper, @Value("${app.default.admin.password}") String adminPass) {
         this.userRepository = userRepository;
-        this.currentUser = currentUser;
         this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.appUserDetailsService = appUserDetailsService;
+        this.modelMapper = modelMapper;
+        this.adminPass = adminPass;
     }
+
+
+    public void init() {
+        if (userRepository.count() == 0 && userRoleRepository.count() == 0) {
+            UserRoleEntity adminRole = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
+            UserRoleEntity moderatorRole = new UserRoleEntity().setRole(UserRoleEnum.MODERATOR);
+            UserRoleEntity userRole = new UserRoleEntity().setRole(UserRoleEnum.USER);
+
+            adminRole = userRoleRepository.save(adminRole);
+            moderatorRole = userRoleRepository.save(moderatorRole);
+            userRole = userRoleRepository.save(userRole);
+
+            initAdmin(List.of(adminRole, moderatorRole));
+            initModerator(List.of(moderatorRole));
+            initUser(List.of(userRole));
+        }
+    }
+
+    private void initAdmin(List<UserRoleEntity> roles) {
+        UserEntity admin = new UserEntity().
+                setUserRoles(roles).
+                setFirstName("Ivo").
+                setLastName("Ivanov").
+                setUsername("admin").
+                setEmail("admin@example.com").
+                setPassword(passwordEncoder.encode(adminPass));
+
+        userRepository.save(admin);
+    }
+
+    private void initModerator(List<UserRoleEntity> roles) {
+        UserEntity moderator = new UserEntity().
+                setUserRoles(roles).
+                setFirstName("Moderator").
+                setLastName("Moderatorov").
+                setUsername("Moderator").
+                setEmail("moderator@example.com").
+                setPassword(passwordEncoder.encode(adminPass));
+
+        userRepository.save(moderator);
+    }
+
+    private void initUser(List<UserRoleEntity> roles) {
+        UserEntity user = new UserEntity().
+                setUserRoles(roles).
+                setFirstName("User").
+                setLastName("Userov").
+                setUsername("user").
+                setEmail("user@example.com").
+                setPassword(passwordEncoder.encode(adminPass));
+
+        userRepository.save(user);
+    }
+
 
     @Override
     public boolean authenticate(String userName, String password) {
@@ -43,22 +108,6 @@ public class UserServiceImpl implements UserService {
         } else {
             return passwordEncoder.matches(password, userEntityOptional.get().getPassword());
         }
-    }
-
-    @Override
-    public void login(UserLoginServiceModel userLoginServiceModel) {
-        Optional<UserEntity> optUser =
-                userRepository.findByUsername(userLoginServiceModel.getUsername());
-
-            UserEntity user = optUser.get();
-            login(user);
-            user.getUserRoles().forEach(r -> currentUser.addRole(r.getRole()));
-        }
-
-
-    @Override
-    public void logOutCurrentUser() {
-        currentUser.setAnonymous(true);
     }
 
     @Override
@@ -81,39 +130,31 @@ public class UserServiceImpl implements UserService {
                 .setFirstName(userRegisterServiceModel.getFirstName())
                 .setLastName(userRegisterServiceModel.getLastName())
                 .setUsername(userRegisterServiceModel.getUsername())
+                .setEmail(userRegisterServiceModel.getEmail())
                 .setPassword(passwordEncoder.encode(userRegisterServiceModel.getPassword()))
                 .setActive(true)
                 .setUserRoles(List.of(userRole));
 
-        newUser = userRepository.save(newUser);
+        userRepository.save(newUser);
+//        login(newUser);
 
-        login(newUser);
+    }
+
+    @Override
+    public void login(UserLoginServiceModel userModel) {
+
+        UserDetails userDetails =
+                appUserDetailsService.loadUserByUsername(modelMapper.map(userModel, UserEntity.class).getEmail());
+
+        Authentication auth =
+                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @Override
     public boolean isUsernameFree(String username) {
         Optional<UserEntity> optUser = userRepository.findByUsername(username);
         return optUser.isEmpty();
-    }
-
-    private void login(UserEntity user) {
-        currentUser.setUserName(user.getUsername())
-                .setFirstName(user.getFirstName())
-                .setLastName(user.getLastName())
-                .setLoggedIn(true);
-    }
-    @Override
-    public void loginUser(String userName) {
-        UserEntity user = userRepository.findByUsername(userName).orElseThrow();
-        List<UserRoleEnum> userRoles = user.
-                getUserRoles().
-                stream().
-                map(UserRoleEntity::getRole).
-                collect(Collectors.toList());
-
-        currentUser.
-                setAnonymous(false).
-                setUserName(user.getUsername()).
-                setUserRoles(userRoles);
     }
 }

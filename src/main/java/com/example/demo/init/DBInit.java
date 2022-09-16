@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.init;
 
 import com.example.demo.model.entity.*;
 import com.example.demo.model.entity.enums.EngineEnum;
@@ -6,6 +6,7 @@ import com.example.demo.model.entity.enums.ModelCategoryEnum;
 import com.example.demo.model.entity.enums.TransmissionEnum;
 import com.example.demo.model.entity.enums.UserRoleEnum;
 import com.example.demo.repository.*;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,19 +24,25 @@ public class DBInit implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
+    private final UserService userService;
+
 
     @Autowired
-    public DBInit(ModelRepository modelRepository, BrandRepository brandRepository, OfferRepository offerRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleRepository userRoleRepository) {
+    public DBInit(ModelRepository modelRepository, BrandRepository brandRepository, OfferRepository offerRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleRepository userRoleRepository, UserService userService) {
         this.modelRepository = modelRepository;
         this.brandRepository = brandRepository;
         this.offerRepository = offerRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRoleRepository = userRoleRepository;
+        this.userService = userService;
     }
 
     @Override
     public void run(String... args) throws Exception {
+
+        userService.init();
+//
 //        BrandEntity fordBrand = new BrandEntity();
 //        fordBrand.setName("Ford");
 //
@@ -56,41 +63,43 @@ public class DBInit implements CommandLineRunner {
 //        initGolf5(vwBrand);
 //        initTaycan(porscheBrand);
 //
-////        createFiestaOffer(initFiesta(fordBrand));
-//
+//        createFiestaOffer(initFiesta(fordBrand));
+
 //        initUsers();
+
+
+    }
+
+//    private void initUsers() {
+//        UserRoleEntity adminRole = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
+//        UserRoleEntity userRole = new UserRoleEntity().setRole(UserRoleEnum.USER);
 //
-
-    }
-
-    private void initUsers() {
-        UserRoleEntity adminRole = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
-        UserRoleEntity userRole = new UserRoleEntity().setRole(UserRoleEnum.USER);
-
-        userRoleRepository.saveAll(List.of(adminRole, userRole));
-
-        UserEntity admin = new UserEntity();
-
-        admin.
-                setFirstName("Ivaylo").
-                setLastName("Ivanov").
-                setUsername("admin").
-                setPassword(passwordEncoder.encode("1234")).
-                setImageUrl("https://previews.123rf.com/images/drizzd/drizzd1608/drizzd160800001/60596893-the-word-admin-and-gear-wheel-3d-rendering.jpg").
-                setUserRoles(List.of(adminRole, userRole));
-
-        UserEntity tedi = new UserEntity();
-
-        tedi.
-                setFirstName("Tedi").
-                setLastName("Ivanova").
-                setUsername("Tedi").
-                setPassword(passwordEncoder.encode("1234")).
-                setImageUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuIbv-7JSgC23hcGq8qDRBpFzdMBEw8urHdQ&usqp=CAU").
-                setUserRoles(List.of(userRole));
-
-        userRepository.saveAll(List.of(admin, tedi));
-    }
+//        userRoleRepository.saveAll(List.of(adminRole, userRole));
+//
+//        UserEntity admin = new UserEntity();
+//
+//        admin.
+//                setEmail("ivo@gmail.com").
+//                setFirstName("Ivaylo").
+//                setLastName("Ivanov").
+//                setUsername("admin").
+//                setPassword(passwordEncoder.encode("1234")).
+//                setImageUrl("https://previews.123rf.com/images/drizzd/drizzd1608/drizzd160800001/60596893-the-word-admin-and-gear-wheel-3d-rendering.jpg").
+//                setUserRoles(List.of(adminRole, userRole));
+//
+//        UserEntity tedi = new UserEntity();
+//
+//        tedi.
+//                setEmail("tedi@gmail.com").
+//                setFirstName("Tedi").
+//                setLastName("Ivanova").
+//                setUsername("Tedi").
+//                setPassword(passwordEncoder.encode("1234")).
+//                setImageUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuIbv-7JSgC23hcGq8qDRBpFzdMBEw8urHdQ&usqp=CAU").
+//                setUserRoles(List.of(userRole));
+//
+//        userRepository.saveAll(List.of(admin, tedi));
+//    }
 
     private void createFiestaOffer(ModelEntity modelEntity) {
         OfferEntity fiestaOffer = new OfferEntity();
@@ -104,7 +113,7 @@ public class DBInit implements CommandLineRunner {
                 .setDescription("Карана е от немска баба, бастуна седи още в багажника, само до църквата е ходила всяка неделя.")
                 .setTransmission(TransmissionEnum.AUTOMATIC)
                 .setModel(modelEntity)
-                .setSeller(userRepository.findByUsername("Tedi").orElse(null));
+                .setSeller(userRepository.findByUsername("admin").orElse(null));
 
         offerRepository.save(fiestaOffer);
     }

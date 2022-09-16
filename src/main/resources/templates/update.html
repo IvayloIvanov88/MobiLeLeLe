@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/navbar::head"></head>
+
+<head th:replace="fragments/head::head">head</head>
 
 <body>
 
 <div th:replace="fragments/navbar :: navbar">Navbar</div>
 
+<!--	      todo only if user posted it-->
+
 <div class="container">
-	<h2  class="text-center text-white">Update Offer</h2>
+	<h2 class="text-center text-white">Update Offer</h2>
 	<form th:method="patch"
+	      sec:authorize="hasRole('ADMIN')"
 	      th:action="@{/offers/{id}/update(id = *{id})}"
 	      th:object="${offerModel}"
 	      class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">

@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username", unique = true)
     private String username;
 
     @ToString.Exclude
@@ -25,6 +25,9 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "email",nullable = false,unique = true)
+    private String email;
 
     private boolean isActive;
 
@@ -94,6 +97,15 @@ public class UserEntity extends BaseEntity {
 
     public UserEntity setUserRoles(List<UserRoleEntity> userRoles) {
         this.userRoles = userRoles;
+        return this;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public UserEntity setEmail(String email) {
+        this.email = email;
         return this;
     }
 }

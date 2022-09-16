@@ -9,6 +9,8 @@ public class UserRegisterServiceModel {
 
     private String password;
 
+    private String email;
+
 
     public String getFirstName() {
         return firstName;
@@ -46,5 +48,12 @@ public class UserRegisterServiceModel {
         return this;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public UserRegisterServiceModel setEmail(String email) {
+        this.email = email;
+        return this;
+    }
 }
