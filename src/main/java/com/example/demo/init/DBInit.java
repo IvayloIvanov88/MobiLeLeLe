@@ -1,10 +1,11 @@
 package com.example.demo.init;
 
-import com.example.demo.model.entity.*;
+import com.example.demo.model.entity.BrandEntity;
+import com.example.demo.model.entity.ModelEntity;
+import com.example.demo.model.entity.OfferEntity;
 import com.example.demo.model.entity.enums.EngineEnum;
 import com.example.demo.model.entity.enums.ModelCategoryEnum;
 import com.example.demo.model.entity.enums.TransmissionEnum;
-import com.example.demo.model.entity.enums.UserRoleEnum;
 import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Component
 public class DBInit implements CommandLineRunner {
