@@ -75,7 +75,7 @@ public class OfferController {
     }
 
     @GetMapping("/{id}/details")
-    private String getOfferDetails(@PathVariable Long id, Model model) {
+    public String getOfferDetails(@PathVariable Long id, Model model) {
         OfferSummaryViewModel offerView = offerService.getOfferById(id);
         model.addAttribute("offer", offerView);
         return "details";

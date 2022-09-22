@@ -49,28 +49,28 @@ public class LoginController {
         return "redirect:/users/login";
     }
     //todo не се използва този логин ами на Spring security имплементацията
-    @PostMapping("/users/login")
-    public String login(@Valid @ModelAttribute UserLoginServiceModel userModel,
-                        BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-
-        boolean hasErrors = bindingResult.hasErrors();
-        LOGGER.info("User tried to login. User with username {} tried to login. Success {}?",
-                userModel.getUsername(), !hasErrors);
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userModel", userModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userModel", bindingResult);
-            return "redirect:/users/login";
-        }
-        if (userService.authenticate(userModel.getUsername(), userModel.getPassword())) {
-            userService.login(userModel);
-            return "redirect:/";
-        } else {
-            redirectAttributes.addFlashAttribute("userModel", userModel);
-            redirectAttributes.addFlashAttribute("notFound", true);
-
-            return "redirect:/users/login";
-        }
-    }
+//    @PostMapping("/users/login")
+//    public String login(@Valid @ModelAttribute UserLoginServiceModel userModel,
+//                        BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+//
+//        boolean hasErrors = bindingResult.hasErrors();
+//        LOGGER.info("User tried to login. User with username {} tried to login. Success {}?",
+//                userModel.getUsername(), !hasErrors);
+//
+//        if (bindingResult.hasErrors()) {
+//            redirectAttributes.addFlashAttribute("userModel", userModel);
+//            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userModel", bindingResult);
+//            return "redirect:/users/login";
+//        }
+//        if (userService.authenticate(userModel.getUsername(), userModel.getPassword())) {
+//            userService.login(userModel);
+//            return "redirect:/";
+//        } else {
+//            redirectAttributes.addFlashAttribute("userModel", userModel);
+//            redirectAttributes.addFlashAttribute("notFound", true);
+//
+//            return "redirect:/users/login";
+//        }
+//    }
 
 }

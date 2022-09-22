@@ -8,13 +8,7 @@ import com.example.demo.model.service.UserRegisterServiceModel;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UserRoleRepository;
 import com.example.demo.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,20 +22,15 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
 
-    private final UserDetailsService appUserDetailsService;
-    private final ModelMapper modelMapper;
     private final String adminPass;
 
     public UserServiceImpl(UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
-                           PasswordEncoder passwordEncoder,
-                           UserDetailsService appUserDetailsService,
-                           ModelMapper modelMapper, @Value("${app.default.admin.password}") String adminPass) {
+                           PasswordEncoder passwordEncoder
+            , @Value("${app.default.admin.password}") String adminPass) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.appUserDetailsService = appUserDetailsService;
-        this.modelMapper = modelMapper;
         this.adminPass = adminPass;
     }
 
@@ -100,17 +89,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public boolean authenticate(String userName, String password) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByUsername(userName);
-
-        if (userEntityOptional.isEmpty()) {
-            return false;
-        } else {
-            return passwordEncoder.matches(password, userEntityOptional.get().getPassword());
-        }
-    }
-
-    @Override
     public boolean passwordsCheck(UserLoginServiceModel loginServiceModel) {
         Optional<UserEntity> optUser =
                 userRepository.findByUsername(loginServiceModel.getUsername());
@@ -138,18 +116,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(newUser);
 //        login(newUser);
 
-    }
-
-    @Override
-    public void login(UserLoginServiceModel userModel) {
-
-        UserDetails userDetails =
-                appUserDetailsService.loadUserByUsername(modelMapper.map(userModel, UserEntity.class).getEmail());
-
-        Authentication auth =
-                new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @Override

@@ -10,6 +10,9 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.OfferService;
 import com.example.demo.web.NotFoundObjectException;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -24,7 +27,7 @@ public class OfferServiceImpl implements OfferService {
     private final ModelRepository modelRepository;
     private final ModelMapper modelMapper;
 
-    public OfferServiceImpl( OfferRepository offerRepository, UserRepository userRepository, ModelRepository modelRepository, ModelMapper modelMapper) {
+    public OfferServiceImpl(OfferRepository offerRepository, UserRepository userRepository, ModelRepository modelRepository, ModelMapper modelMapper) {
         this.offerRepository = offerRepository;
         this.userRepository = userRepository;
         this.modelRepository = modelRepository;
@@ -36,6 +39,7 @@ public class OfferServiceImpl implements OfferService {
         OfferEntity offer = offerRepository.findById(id).get();
         return map(offer);
     }
+
     @Override
     public List<OfferSummaryViewModel> getAllOffers() {
         return offerRepository.findAll().stream().map(this::map).collect(Collectors.toList());
@@ -68,16 +72,24 @@ public class OfferServiceImpl implements OfferService {
     }
 
 
-
-        private OfferEntity asNewEntity(OfferServiceModel model) {
+    private OfferEntity asNewEntity(OfferServiceModel model) {
         OfferEntity offerEntity = new OfferEntity();
         modelMapper.map(model, offerEntity);
         offerEntity.setId(null);
 
         offerEntity.setModel(modelRepository.findById(model.getModelId()).orElseThrow());
-        //todo fix it with security
-//        offerEntity.setSeller(userRepository.findByUsername(currentUser.getUserName()).orElseThrow());
+        offerEntity.setSeller(userRepository.findByEmail(userEmail()).orElseThrow());
+
         return offerEntity;
+    }
+
+    private String userEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            String currentUserEmail = authentication.getName();
+            return currentUserEmail;
+        }
+        throw new NotFoundObjectException("No such user");
     }
 
     private OfferEntity setOffer(OfferEntity offer, OfferUpdateServiceModel serviceModel) {

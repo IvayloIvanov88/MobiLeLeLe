@@ -1,4 +1,4 @@
-package com.example.demo.web;
+package com.example.demo.model.entity;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;

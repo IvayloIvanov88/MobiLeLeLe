@@ -70,37 +70,6 @@ public class DBInit implements CommandLineRunner {
 
     }
 
-//    private void initUsers() {
-//        UserRoleEntity adminRole = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
-//        UserRoleEntity userRole = new UserRoleEntity().setRole(UserRoleEnum.USER);
-//
-//        userRoleRepository.saveAll(List.of(adminRole, userRole));
-//
-//        UserEntity admin = new UserEntity();
-//
-//        admin.
-//                setEmail("ivo@gmail.com").
-//                setFirstName("Ivaylo").
-//                setLastName("Ivanov").
-//                setUsername("admin").
-//                setPassword(passwordEncoder.encode("1234")).
-//                setImageUrl("https://previews.123rf.com/images/drizzd/drizzd1608/drizzd160800001/60596893-the-word-admin-and-gear-wheel-3d-rendering.jpg").
-//                setUserRoles(List.of(adminRole, userRole));
-//
-//        UserEntity tedi = new UserEntity();
-//
-//        tedi.
-//                setEmail("tedi@gmail.com").
-//                setFirstName("Tedi").
-//                setLastName("Ivanova").
-//                setUsername("Tedi").
-//                setPassword(passwordEncoder.encode("1234")).
-//                setImageUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuIbv-7JSgC23hcGq8qDRBpFzdMBEw8urHdQ&usqp=CAU").
-//                setUserRoles(List.of(userRole));
-//
-//        userRepository.saveAll(List.of(admin, tedi));
-//    }
-
     private void createFiestaOffer(ModelEntity modelEntity) {
         OfferEntity fiestaOffer = new OfferEntity();
 

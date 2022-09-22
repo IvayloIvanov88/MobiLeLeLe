@@ -70,6 +70,8 @@ public class SecurityConfiguration {
                         logout().
                 // which is the logout url
                         logoutUrl("/users/logout").
+                // which is the success Url, after logout, default is log in
+//                        logoutSuccessUrl("/").
                 // invalidate the session and delete the cookies
                         invalidateHttpSession(true).
                 deleteCookies("JSESSIONID");
