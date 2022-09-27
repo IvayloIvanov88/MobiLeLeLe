@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.demo.configuration.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -18,8 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class MySimpleUrlAuthenticationSuccessHandler
-        implements AuthenticationSuccessHandler {
+public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MySimpleUrlAuthenticationSuccessHandler.class);
 
@@ -34,8 +33,7 @@ public class MySimpleUrlAuthenticationSuccessHandler
         clearAuthenticationAttributes(request);
     }
 
-    protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication
-    ) throws IOException {
+    protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
 
         String targetUrl = determineTargetUrl(authentication);
 
@@ -52,8 +50,9 @@ public class MySimpleUrlAuthenticationSuccessHandler
     protected String determineTargetUrl(final Authentication authentication) {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/index.html");
-        roleTargetUrlMap.put("ROLE_ADMIN", "/brands.html");
+        roleTargetUrlMap.put("ROLE_USER", "/index");
+        roleTargetUrlMap.put("ROLE_ADMIN", "/");
+        roleTargetUrlMap.put("ROLE_MODERATOR", "/brands");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {

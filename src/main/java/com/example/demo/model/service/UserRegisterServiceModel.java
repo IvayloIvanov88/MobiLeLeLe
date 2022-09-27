@@ -2,15 +2,10 @@ package com.example.demo.model.service;
 
 public class UserRegisterServiceModel {
     private String firstName;
-
     private String lastName;
-
     private String username;
-
     private String password;
-
     private String email;
-
 
     public String getFirstName() {
         return firstName;

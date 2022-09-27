@@ -65,7 +65,6 @@ public class DBInit implements CommandLineRunner {
 //
 //        createFiestaOffer(initFiesta(fordBrand));
 
-//        initUsers();
 
 
     }

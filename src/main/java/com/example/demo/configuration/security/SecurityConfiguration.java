@@ -1,10 +1,9 @@
-package com.example.demo.config;
+package com.example.demo.configuration.security;
 
 
-import com.example.demo.model.MySimpleUrlAuthenticationSuccessHandler;
 import com.example.demo.model.entity.enums.UserRoleEnum;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.web.AppUserDetailsService;
+import lombok.Data;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Data
 @Configuration
 public class SecurityConfiguration {
 
@@ -23,6 +23,8 @@ public class SecurityConfiguration {
     // 1. PasswordEncoder
     // 2. SecurityFilterChain
     // 3. UserDetailsService
+
+    public final Oauth2UserSuccessHandler oauth2UserSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,6 +34,11 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
         return new MySimpleUrlAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new AppUserDetailsService(userRepository);
     }
 
     @Bean
@@ -61,7 +68,7 @@ public class SecurityConfiguration {
                 // the name of the password form field
                         passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY).
                 // where to go in case that the login is successful if login defined by role use it
-//        successHandler(myAuthenticationSuccessHandler()).
+//                        successHandler(myAuthenticationSuccessHandler()).
         defaultSuccessUrl("/", true).
                 // where to go in case that the login failed
                         failureForwardUrl("/users/login-error").
@@ -74,16 +81,14 @@ public class SecurityConfiguration {
 //                        logoutSuccessUrl("/").
                 // invalidate the session and delete the cookies
                         invalidateHttpSession(true).
-                deleteCookies("JSESSIONID");
-
+                deleteCookies("JSESSIONID")
+                //for login with Facebook
+                .and()
+                .oauth2Login()
+                .loginPage("/login")
+                .successHandler(oauth2UserSuccessHandler);
 
         return http.build();
     }
-
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new AppUserDetailsService(userRepository);
-    }
-
 
 }

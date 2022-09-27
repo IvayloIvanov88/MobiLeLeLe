@@ -8,29 +8,36 @@ import com.example.demo.model.service.UserRegisterServiceModel;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.UserRoleRepository;
 import com.example.demo.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-
+//    private final UserDetailsService appUserDetailsService;
     private final String adminPass;
 
     public UserServiceImpl(UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
-                           PasswordEncoder passwordEncoder
-            , @Value("${app.default.admin.password}") String adminPass) {
+                           @Lazy PasswordEncoder passwordEncoder,
+//                           UserDetailsService appUserDetailsService,
+                           @Value("${app.default.admin.password}") String adminPass) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
+//        this.appUserDetailsService = appUserDetailsService;
         this.adminPass = adminPass;
     }
 
@@ -90,8 +97,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean passwordsCheck(UserLoginServiceModel loginServiceModel) {
-        Optional<UserEntity> optUser =
-                userRepository.findByUsername(loginServiceModel.getUsername());
+        Optional<UserEntity> optUser = userRepository.findByUsername(loginServiceModel.getUsername());
 
         if (optUser.isEmpty()) return false;
         UserEntity user = optUser.get();
@@ -99,6 +105,31 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.matches(loginServiceModel.getPassword(), user.getPassword());
     }
 
+    //    @Override
+//    public void registerAndLogin(UserRegisterServiceModel userRegisterServiceModel) {
+//        UserEntity newUser =
+//                new UserEntity().
+//                        setEmail(userRegisterServiceModel.getEmail()).
+//                        setFirstName(userRegisterServiceModel.getFirstName()).
+//                        setLastName(userRegisterServiceModel.getLastName()).
+//                        setPassword(passwordEncoder.encode(userRegisterServiceModel.getPassword()));
+//
+//        userRepository.save(newUser);
+//
+//        UserDetails userDetails =
+//                appUserDetailsService.loadUserByUsername(newUser.getEmail());
+//
+//        Authentication auth =
+//                new UsernamePasswordAuthenticationToken(
+//                        userDetails,
+//                        userDetails.getPassword(),
+//                        userDetails.getAuthorities()
+//                );
+//
+//        SecurityContextHolder.
+//                getContext().
+//                setAuthentication(auth);
+//    }
     @Override
     public void register(UserRegisterServiceModel userRegisterServiceModel) {
 
@@ -122,5 +153,27 @@ public class UserServiceImpl implements UserService {
     public boolean isUsernameFree(String username) {
         Optional<UserEntity> optUser = userRepository.findByUsername(username);
         return optUser.isEmpty();
+    }
+
+    @Override
+    public UserEntity getOrCreateUser(String email) {
+
+        Objects.requireNonNull(email);
+
+        Optional<UserEntity> userEntityOpt = userRepository.findByEmail(email);
+
+        return userEntityOpt.orElseGet(() -> createUser(email));
+    }
+
+
+    private UserEntity createUser(String email) {
+        log.info("Creating a new user with email [GDPR]");
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(email);
+
+        UserRoleEntity userRole = new UserRoleEntity().setRole(UserRoleEnum.USER);
+
+        userEntity.setUserRoles(List.of(userRole));
+        return userRepository.save(userEntity);
     }
 }
