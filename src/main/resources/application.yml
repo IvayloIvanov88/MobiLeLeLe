@@ -1,5 +1,8 @@
---server:
+server:
   port: 8181
+error:
+  include-message: always
+
 info:
   app:
     description: sample application
@@ -22,12 +25,13 @@ management:
   trace:
     http:
       enabled: true
+      
 spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    password: *******
     url: jdbc:mysql://localhost:3306/car_market?createDatabaseIfNotExist=true&amp
     username: root
+    password: A4620692!
   jpa:
     hibernate:
       ddl-auto: update
@@ -35,8 +39,18 @@ spring:
       format_sql: true
       show_sql: true
       use_sql_comments: true
-  main:
-    allow-bean-definition-overriding: true
+#  main:
+#    allow-circular-reference: true
+#    allow-bean-definition-overriding: true
+
+  security:
+    oauth2:
+      client:
+         registration:
+           facebook:
+               client-id: 452187580203704
+               client-password: 4629b0cfc49f04da5208997d2d587103
+
   mvc:
     hiddenmethod:
       filter:
