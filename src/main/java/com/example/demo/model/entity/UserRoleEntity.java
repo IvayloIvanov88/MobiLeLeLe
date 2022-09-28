@@ -1,14 +1,20 @@
 package com.example.demo.model.entity;
 
 import com.example.demo.model.entity.enums.UserRoleEnum;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "user_roles")
 public class UserRoleEntity {
+
+    public UserRoleEntity(UserRoleEnum role) {
+        this.role = role;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +40,4 @@ public class UserRoleEntity {
         this.role = role;
         return this;
     }
-
 }

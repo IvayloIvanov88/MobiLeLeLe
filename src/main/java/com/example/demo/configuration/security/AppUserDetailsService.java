@@ -11,14 +11,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 // NOTE: This is not annotated as @Service, because we will return it as a bean.
 @Slf4j
-
 public class AppUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;

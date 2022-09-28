@@ -28,15 +28,14 @@ public class Oauth2UserSuccessHandler extends SavedRequestAwareAuthenticationSuc
         this.userService = userService;
         this.userDetailsService = userDetailsService;
 
-        setDefaultTargetUrl("/home");
+        setDefaultTargetUrl("/");
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
         if (authentication instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oAuth2AuthenticationToken =
-                    (OAuth2AuthenticationToken) authentication;
+            OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) authentication;
 
             String email = oAuth2AuthenticationToken
                     .getPrincipal()

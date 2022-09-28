@@ -1,5 +1,8 @@
 package com.example.demo.model.entity;
 
+import com.example.demo.model.entity.enums.UserRoleEnum;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -10,6 +13,8 @@ import java.util.List;
 
 @ToString
 @Entity
+@Getter
+@Setter
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 
@@ -32,6 +37,7 @@ public class UserEntity extends BaseEntity {
     private boolean isActive;
 
     private String imageUrl;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<UserRoleEntity> userRoles = new ArrayList<>();
