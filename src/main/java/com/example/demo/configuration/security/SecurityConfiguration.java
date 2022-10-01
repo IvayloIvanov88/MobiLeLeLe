@@ -55,7 +55,9 @@ public class SecurityConfiguration {
                 // where to go in case that the login is successful if login defined by role use it
 //                        successHandler(myAuthenticationSuccessHandler()).
         defaultSuccessUrl("/", true).
-                failureForwardUrl("/users/login-error").
+//                failureForwardUrl("/users/login-error").
+        failureUrl("/login-error").
+
                 and().
                 logout().
                 logoutUrl("/users/logout").

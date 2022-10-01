@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +37,9 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferSummaryViewModel getOfferById(Long id) {
-        OfferEntity offer = offerRepository.findById(id).get();
-        return map(offer);
+//        OfferEntity offer = offerRepository.findById(id).get();
+        Optional<OfferEntity> offer = offerRepository.findById(id);
+        return offer.map(this::map).orElse(null);
     }
 
     @Override

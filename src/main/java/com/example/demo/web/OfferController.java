@@ -77,6 +77,9 @@ public class OfferController {
     @GetMapping("/{id}/details")
     public String getOfferDetails(@PathVariable Long id, Model model) {
         OfferSummaryViewModel offerView = offerService.getOfferById(id);
+        if (offerView == null) {
+            return "redirect:/offers/add";
+        }
         model.addAttribute("offer", offerView);
         return "details";
     }
@@ -85,7 +88,6 @@ public class OfferController {
     public String updateOffer(@PathVariable Long id, Model model) {
         OfferUpdateBindingModel updateBindingModel = modelMapper
                 .map(offerService.getOfferById(id), OfferUpdateBindingModel.class);
-
         model.addAttribute("offerModel", updateBindingModel)
                 .addAttribute("engines", EngineEnum.values())
                 .addAttribute("transmissions", TransmissionEnum.values());
@@ -94,8 +96,9 @@ public class OfferController {
 
     @GetMapping("/{id}/update/errors")
     public String updateOfferErrors(@PathVariable Long id, Model model) {
-        model.addAttribute("engines", EngineEnum.values())
-                .addAttribute("transmissions", TransmissionEnum.values());
+        model.
+                addAttribute("engines", EngineEnum.values()).
+                addAttribute("transmissions", TransmissionEnum.values());
         return "update";
     }
 
@@ -106,8 +109,9 @@ public class OfferController {
                               RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("offerModel", offerModel)
-                    .addFlashAttribute("org.springframework.validation.BindingResult.offerModel", bindingResult);
+            redirectAttributes.
+                    addFlashAttribute("offerModel", offerModel).
+                    addFlashAttribute("org.springframework.validation.BindingResult.offerModel", bindingResult);
 
             return "redirect:/offers/" + id + "/update/errors";
         }
@@ -115,6 +119,7 @@ public class OfferController {
 
         return "redirect:/offers/" + id + "/details";
     }
+
     @DeleteMapping("/offer/{id}")
     public String delete(@PathVariable long id, Model model) {
 
