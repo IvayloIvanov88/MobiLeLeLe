@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final ModelMapper modelMapper;
     private final RoleService roleService;
-//    private final UserDetailsService appUserDetailsService;
     private final String adminPass;
 
     public UserServiceImpl(UserRepository userRepository,

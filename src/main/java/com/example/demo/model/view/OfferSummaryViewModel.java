@@ -70,7 +70,6 @@ public class OfferSummaryViewModel {
         return this;
     }
 
-
     public String getImageUrl() {
         return imageUrl;
     }
@@ -97,8 +96,6 @@ public class OfferSummaryViewModel {
         this.price = price;
         return this;
     }
-
-
 
     public OfferSummaryViewModel setTransmission(TransmissionEnum transmission) {
         this.transmission = transmission;

@@ -8,8 +8,11 @@ import com.example.demo.model.service.OfferUpdateServiceModel;
 import com.example.demo.model.view.OfferSummaryViewModel;
 import com.example.demo.service.BrandService;
 import com.example.demo.service.OfferService;
+import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/offers")
 public class OfferController {
@@ -25,13 +29,6 @@ public class OfferController {
     private final OfferService offerService;
     private final BrandService brandService;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public OfferController(OfferService offerService, BrandService brandService, ModelMapper modelMapper) {
-        this.offerService = offerService;
-        this.brandService = brandService;
-        this.modelMapper = modelMapper;
-    }
 
 
     @ModelAttribute("offerModel")
@@ -53,7 +50,7 @@ public class OfferController {
 
         return "offer-add";
     }
-
+//    @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
     public String addOffer(@Valid @ModelAttribute OfferServiceModel offerModel, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
@@ -84,6 +81,7 @@ public class OfferController {
         return "details";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/offer/{id}/update")
     public String updateOffer(@PathVariable Long id, Model model) {
         OfferUpdateBindingModel updateBindingModel = modelMapper
@@ -120,6 +118,7 @@ public class OfferController {
         return "redirect:/offers/" + id + "/details";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/offer/{id}")
     public String delete(@PathVariable long id, Model model) {
 

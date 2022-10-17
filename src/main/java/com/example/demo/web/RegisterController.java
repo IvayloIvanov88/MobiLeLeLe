@@ -3,6 +3,7 @@ package com.example.demo.web;
 import com.example.demo.model.binding.UserRegisterBindingModel;
 import com.example.demo.model.service.UserRegisterServiceModel;
 import com.example.demo.service.UserService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,16 +18,11 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
+@AllArgsConstructor
 public class RegisterController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public RegisterController(UserService userService) {
-        this.userService = userService;
-        this.modelMapper = new ModelMapper();
-    }
 
     @ModelAttribute(name = "userModel")
     public UserRegisterBindingModel userModel() {
@@ -49,7 +45,8 @@ public class RegisterController {
                            RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userModel", userModel)
+            redirectAttributes
+                    .addFlashAttribute("userModel", userModel)
                     .addFlashAttribute("org.springframework.validation.BindingResult.userModel", bindingResult);
 
             bindingResult.getAllErrors().forEach(error -> {

@@ -2,10 +2,13 @@ package com.example.demo.service.impl;
 
 import com.example.demo.model.entity.BrandEntity;
 import com.example.demo.model.entity.ModelEntity;
+import com.example.demo.model.service.BrandAddServiceModel;
 import com.example.demo.model.view.BrandViewModel;
 import com.example.demo.model.view.ModelViewModel;
+import com.example.demo.repository.BrandRepository;
 import com.example.demo.repository.ModelRepository;
 import com.example.demo.service.BrandService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +18,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class BrandServiceImpl implements BrandService {
 
     private final ModelRepository modelRepository;
+    private final BrandRepository brandRepository;
     private final ModelMapper modelMapper;
 
-    public BrandServiceImpl(ModelRepository modelRepository, ModelMapper modelMapper) {
-        this.modelRepository = modelRepository;
-        this.modelMapper = modelMapper;
+    @Override
+    public void delete(long id) {
+        brandRepository.deleteById(id);
     }
 
     @Override
@@ -45,6 +50,21 @@ public class BrandServiceImpl implements BrandService {
             brandViewModelOpt.get().addModel(newModelViewModel);
         });
         return result;
+    }
+
+
+    @Override
+    public BrandViewModel getById(Long id) {
+        return modelMapper.map(brandRepository.findById(id),BrandViewModel.class);
+    }
+
+    @Override
+    public long save(BrandAddServiceModel brandModel) {
+        BrandEntity newBrand = brandRepository.save(modelMapper.map(brandModel, BrandEntity.class));
+//        ModelEntity lada = new ModelEntity().setName("Ladaa").setBrand(newBrand);
+//        modelRepository.save(lada);
+//        brandModel.setModels(List.of(lada));
+        return newBrand.getId();
     }
 
     private static Optional<BrandViewModel> findByName(List<BrandViewModel> allModels, String name) {

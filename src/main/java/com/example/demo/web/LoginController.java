@@ -3,9 +3,12 @@ package com.example.demo.web;
 import com.example.demo.model.service.UserLoginServiceModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,7 +42,7 @@ public class LoginController {
 //        return "redirect:/users/login";
 //    }
 
-    @GetMapping("/login-error")
+    @PostMapping("/login-error")
     public ModelAndView onLoginError(
             @ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) String email
     ) {
