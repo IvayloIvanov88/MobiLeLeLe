@@ -2,6 +2,7 @@ package com.example.demo.model.entity;
 
 import com.example.demo.model.entity.enums.ModelCategoryEnum;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -26,7 +27,7 @@ public class ModelEntity extends BaseEntity {
     @Column(name = "end_year")
     private Integer endYear;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "brand_id")
     private BrandEntity brand;
 

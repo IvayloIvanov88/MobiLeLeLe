@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head::head">head</head>
+
+<body>
+
+<div th:replace="fragments/navbar::navbar"/>
+</div>
+<div class="container"><h2 class="text-center text-white">Upload model</h2>
+	<form method="POST"
+	      th:object="${model}"
+	      th:action="@{/models/add}"
+	      class="main-form mx-auto col-md-8 d-flex flex-column justify-content-center">
+
+		<div class="row">
+			<div class="form-group col-md-6 mb-3"><label class="text-center text-white font-weight-bold" for="brandName">Brand</label>
+
+				<select id="brandName"
+				        name="brandName"
+
+				        class="form-control">
+					<option value="">- Select brand -</option>
+
+					<option th:each="brand: ${brands}"
+					        th:value="${brand.name}"
+					        th:label="${brand.name}"
+					        th:text="${brand}"
+					        th:selected="${brand.name} == *{brandName}">>
+
+					</option>
+				</select>
+				<p class="invalid-feedback">Vehicle brand is required.</p></div>
+
+			<div class="form-group col-md-6 mb-3">
+				<label class="text-center text-white font-weight-bold" for="category">Category</label>
+				<select
+						id="category"
+						name="category"
+						th:errorclass="is-invalid"
+						class="form-control">
+					<option value="">- Select category -</option>
+					<option
+							th:each="aCategory: ${category}"
+							th:value="${aCategory}"
+							th:text="${aCategory}"
+							th:selected="${aCategory} == *{category}">
+						Category type
+					</option>
+				</select>
+				<p class="invalid-feedback">Category type is required.</p></div>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-12 mb-3"><label class="text-white font-weight-bold" for="name">New model </label>
+				<input
+						id="name"
+						name="name"
+						th:errorclass="is-invalid"
+						th:value="*{name}"
+						type="text"
+						class="form-control" placeholder="Enter new model ">
+				<p class="invalid-feedback">Vehicle model is required.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-md-6 mb-3"><label for="startYear"
+			                                             class="text-white font-weight-bold">Manufacturing start
+				year</label>
+				<input id="startYear"
+				       name="startYear"
+				       th:value="*{startYear}"
+				       th:errorclass="is-invalid"
+				       type="number" min="1930" max="2099" step="1"
+				       class="form-control" placeholder="Manufacturing start year"/>
+				<p class="invalid-feedback">Manufacturing start year is required.</p>
+			</div>
+			<div class="form-group col-md-6 mb-3"><label for="endYear"
+			                                             class="text-white font-weight-bold">Manufacturing end
+				year</label>
+				<input id="endYear"
+				       name="endYear"
+				       th:value="*{endYear}"
+				       type="number" min="1930" max="2099" step="1"
+				       class="form-control" placeholder="Manufacturing end year"/>
+
+			</div>
+		</div>
+
+		<div class="form-group"><label class="text-white font-weight-bold" for="imageUrl">Image URL</label>
+			<input
+					id="imageUrl"
+					name="imageUrl"
+					th:errorclass="is-invalid"
+					th:value="*{imageUrl}"
+					type="url"
+					class="form-control" placeholder="Put vehicle image URL here">
+			<p class="invalid-feedback">Vehicle image URL is required.</p>
+		</div>
+
+		<div class="row">
+			<div class="col col-md-4">
+				<div class="button-holder d-flex">
+					<input type="submit" class="btn btn-info btn-lg" value="Submit Offer"/>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<div>
+	<footer></footer>
+</div>
+
+</body>
+</html>

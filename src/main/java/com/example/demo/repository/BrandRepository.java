@@ -11,4 +11,5 @@ public interface BrandRepository extends JpaRepository<BrandEntity, Long> {
 
     Optional<BrandEntity> findById(long id);
 
+    BrandEntity findByName(String brandName);
 }

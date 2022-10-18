@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+<head th:replace="fragments/head::head">head</head>
+
+<body>
+
+<div th:replace="fragments/navbar::navbar"/>
+navbar</div>
+
+
+<div class="container-fluid">
+	<h2 class="text-center text-white mt-5">Details</h2>
+	<div th:object="${brands}"
+	     class="offers row mx-auto d-flex flex-row justify-content-center">
+		<div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">
+
+			<div class="card-body pb-1">
+				<h5 class="card-title"
+				    th:text="'Brand name: '+ *{name}"
+				>Brand name </h5>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<form th:action="@{/brands/{id}/update (id = ${id})}"
+					      th:method="get"
+					      sec:authorize="isAuthenticated()">
+
+						<input type="submit" class="card-link" value="Update"/>
+					</form>
+
+					<form th:action="@{/brands/delete/{id}/(id=${id})}"
+					      th:method="delete"
+					      sec:authorize="hasRole('ADMIN')">
+						<input class="card-link" type="submit" value="Delete">
+					</form>
+				</div>
+			</div>
+
+<!--			<div class="offer card col-sm-2 col-md-3  col-lg-4 m-1 p-0">-->
+<!--				<img alt="Car image" th:src="*{imageUrl}" class="img-thumbnail rounded">>-->
+<!--			</div>-->
+		</div>
+	</div>
+
+	<div>
+		<footer></footer>
+	</div>
+</div>
+</body>
+</html>
