@@ -1,10 +1,10 @@
 package com.example.demo.configuration.security;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -20,39 +20,37 @@ import java.util.Map;
 @Slf4j
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MySimpleUrlAuthenticationSuccessHandler.class);
-
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     public MySimpleUrlAuthenticationSuccessHandler() {
     }
 
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-
         handle(request, response, authentication);
         clearAuthenticationAttributes(request);
     }
 
-    protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
+    protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
 
         String targetUrl = determineTargetUrl(authentication);
 
         if (response.isCommitted()) {
-            LOGGER.debug(
+            log.debug(
                     "Response has already been committed. Unable to redirect to "
                             + targetUrl);
             return;
         }
 
-//        redirectStrategy.sendRedirect(request, response, targetUrl);
+       redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
 
         Map<String, String> roleTargetUrlMap = new HashMap<>();
-        roleTargetUrlMap.put("ROLE_USER", "/index");
-        roleTargetUrlMap.put("ROLE_ADMIN", "/");
-        roleTargetUrlMap.put("ROLE_MODERATOR", "/brands");
+        roleTargetUrlMap.put("ROLE_USER", "/");
+        roleTargetUrlMap.put("ROLE_ADMIN", "/brands/all");
+        roleTargetUrlMap.put("ROLE_MODERATOR", "/brands/all");
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
