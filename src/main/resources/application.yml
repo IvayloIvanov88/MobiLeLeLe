@@ -28,14 +28,17 @@ management:
       
 spring:
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/car_market?createDatabaseIfNotExist=true&amp
-    username: root
-    password: ******
+    driverClassName: org.postgresql.Driver
+    url: "jdbc:postgresql://${JDBC_DATABASE_URL:localhost}:5432/car_market?createDatabaseIfNotExist=true&amp"
+    username: "${JDBC_DATABASE_USERNAME:postgres}"
+    password: "${JDBC_DATABASE_PASSWORD:A4620692!}"
+  thymeleaf:
+    mode: HTML
+
   jpa:
     hibernate:
       ddl-auto: update
-      dialect: org.hibernate.dialect.MySQL8Dialect
+      dialect: org.hibernate.dialect.PostgreSQLDialect
       format_sql: true
       show_sql: true
       use_sql_comments: true
@@ -43,6 +46,7 @@ spring:
 #    allow-circular-reference: true
 #    allow-bean-definition-overriding: true
 
+#Facebook login config
   security:
     oauth2:
       client:
@@ -55,8 +59,19 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
+#password
 app:
   default:
     admin:
-      password: topsecret
+      password: 1234
+
+#Cloudinary Properties
+cloudinary:
+  cloud-name: djklypnmm
+  api-key: 168879155711435
+  api-secret: avHbGBij5NgNmX46QLK6VYu3UIE
+#Multipart config
+# multipart
+  multipart.enabled: true
+  spring.http.multipart.max-file-size: 500000KB
+  spring.http.multipart.max-request-size: 500000KB
