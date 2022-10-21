@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class DBInit implements CommandLineRunner {
@@ -42,27 +43,27 @@ public class DBInit implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         userService.init();
-//
-//        BrandEntity fordBrand = new BrandEntity();
-//        fordBrand.setName("Ford");
-//
-//        BrandEntity audiBrand = new BrandEntity();
-//        audiBrand.setName("Audi");
-//
-//        BrandEntity vwBrand = new BrandEntity();
-//        vwBrand.setName("VW");
-//
-//        BrandEntity porscheBrand = new BrandEntity();
-//        porscheBrand.setName("Porsche");
-//
+
+        BrandEntity fordBrand = new BrandEntity();
+        fordBrand.setName("Ford");
+
+        BrandEntity audiBrand = new BrandEntity();
+        audiBrand.setName("Audi");
+
+        BrandEntity vwBrand = new BrandEntity();
+        vwBrand.setName("VW");
+
+        BrandEntity porscheBrand = new BrandEntity();
+        porscheBrand.setName("Porsche");
+
 //        brandRepository.saveAll(List.of(porscheBrand, fordBrand, audiBrand, vwBrand));
-//
+
 //        initFiesta(fordBrand);
 //        initA4(audiBrand);
 //        initEtron(audiBrand);
 //        initGolf5(vwBrand);
 //        initTaycan(porscheBrand);
-//
+
 //        createFiestaOffer(initFiesta(fordBrand));
 
 
