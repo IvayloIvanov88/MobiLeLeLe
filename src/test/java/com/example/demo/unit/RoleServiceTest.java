@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.unit;
 
 import com.example.demo.model.entity.UserRoleEntity;
 import com.example.demo.model.entity.enums.UserRoleEnum;
@@ -24,27 +24,28 @@ public class RoleServiceTest {
     @Mock
     private RoleRepository mockRoleRepository;
     private ModelMapper modelMapper;
+    private UserRoleEntity admin;
+    private RoleServiceModel roleAdmin;
 
     @BeforeEach
     public void setup() {
         modelMapper = mock(ModelMapper.class);
         serviceToTest = new RoleServiceImpl(this.mockRoleRepository, modelMapper);
-    }
 
-//    @Test
-    public void testFindByName() {
-
-        UserRoleEntity admin = new UserRoleEntity().setId(1L).setRole(UserRoleEnum.ADMIN);
-
-        RoleServiceModel roleAdmin = new RoleServiceModel();
+        admin = new UserRoleEntity().setId(1L).setRole(UserRoleEnum.ADMIN);
+        roleAdmin = new RoleServiceModel();
         roleAdmin.setId(1);
         roleAdmin.setRole(admin);
 
+    }
+
+    @Test
+    public void testFindByName() {
         when(mockRoleRepository.findByRole(admin.getRole())).thenReturn(admin);
 
         RoleServiceModel actual = serviceToTest.findByName(admin.getRole());
 
-        Assertions.assertEquals(roleAdmin.getRole(),actual.getRole());
+        Assertions.assertEquals(roleAdmin.getRole(), actual.getRole());
     }
 
 }

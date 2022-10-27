@@ -3,18 +3,16 @@ package com.example.demo.model.service;
 import com.example.demo.model.entity.enums.EngineEnum;
 import com.example.demo.model.entity.enums.TransmissionEnum;
 import com.example.demo.model.validation.YearInPastOrPresent;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
+@Data
 public class OfferServiceModel {
 
     @NotNull

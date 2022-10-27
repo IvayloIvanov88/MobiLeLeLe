@@ -1,13 +1,8 @@
 package com.example.demo.web;
 
-import com.example.demo.model.entity.enums.EngineEnum;
 import com.example.demo.model.entity.enums.ModelCategoryEnum;
-import com.example.demo.model.entity.enums.TransmissionEnum;
-import com.example.demo.model.service.BrandAddServiceModel;
 import com.example.demo.model.service.ModelAddServiceModel;
-import com.example.demo.model.service.OfferServiceModel;
 import com.example.demo.service.BrandService;
-import com.example.demo.service.ModelService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -43,15 +38,16 @@ public class ModelController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
-    public String addBrand(@Valid @ModelAttribute ModelAddServiceModel model, BindingResult bindingResult,
+    public String addModel(@Valid @ModelAttribute ModelAddServiceModel model, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("model", model);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.model", bindingResult);
             return "redirect:/models/add";
         }
-        long newBrand = brandService.saveModel(model);
-        return "redirect:/brands/" + newBrand + "/model-details";
+        long newModelId = brandService.saveModel(model);
+
+        return "redirect:/brands/" + newModelId + "/model-details";
         //todo model-details
     }
 }

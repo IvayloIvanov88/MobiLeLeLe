@@ -1,12 +1,10 @@
 package com.example.demo.model.view;
 
 import com.example.demo.model.entity.enums.ModelCategoryEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

@@ -1,14 +1,13 @@
 package com.example.demo.model.entity.service;
 
 import com.example.demo.model.entity.UserRoleEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class RoleServiceModel extends BaseServiceModel {
 //    private List<UserRoleEntity> userRolesName;

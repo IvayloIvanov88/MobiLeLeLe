@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.unit;
 
 import com.example.demo.model.entity.BrandEntity;
 import com.example.demo.model.entity.ModelEntity;
@@ -28,39 +28,41 @@ public class BrandServiceTest {
     @Mock
     BrandRepository mockBrandRepository;
 
+    private BrandEntity brandAudi;
+    private BrandEntity brandVW;
+    private ModelEntity modelAudi;
+    private ModelEntity modelVW;
+
     @BeforeEach
     public void setUp() {
         serviceToTest = new BrandServiceImpl(mockModelRepository, mockBrandRepository, new ModelMapper());
 
-    }
-
-    @Test
-    public void testGetAllBrands() {
-        // Arrange
-        BrandEntity brandAudi = new BrandEntity();
+        brandAudi = new BrandEntity();
         brandAudi.setId(1234L);
         brandAudi.setName("Audi");
 
-        BrandEntity brandVW = new BrandEntity();
-        brandAudi.setId(333L);
-        brandAudi.setName("VW");
+        brandVW = new BrandEntity();
+        brandVW.setId(333L);
+        brandVW.setName("VW");
 
 
-        ModelEntity modelAudi = new ModelEntity();
+        modelAudi = new ModelEntity();
         modelAudi.setBrand(brandAudi);
         modelAudi.setId(22222L);
         modelAudi.setName("E-tron");
 
-        ModelEntity modelVW = new ModelEntity();
+         modelVW = new ModelEntity();
         modelVW.setBrand(brandVW);
         modelVW.setId(22222L);
         modelVW.setName("Golf");
+    }
+
+    @Test
+    public void testGetAllBrands() {
 
         when(mockModelRepository.findAll()).thenReturn(List.of(modelAudi, modelVW));
-        //act
         List<BrandViewModel> allModels = serviceToTest.getAllBrands();
 
-        //assert
         BrandViewModel actualAudi = allModels.get(0);
         BrandViewModel actualVW = allModels.get(1);
 

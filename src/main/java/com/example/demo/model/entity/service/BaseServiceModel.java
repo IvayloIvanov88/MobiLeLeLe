@@ -1,10 +1,11 @@
 package com.example.demo.model.entity.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class BaseServiceModel {
     private long id;
 }

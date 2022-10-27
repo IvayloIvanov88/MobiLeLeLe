@@ -14,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class OfferControllerTest {
 
+    private static final String REDIRECT_USER_LOGIN ="/users/login";
     @Autowired
     private MockMvc mockMvc;
 
@@ -25,14 +26,22 @@ public class OfferControllerTest {
                 andExpect(status().isOk()).
                 andExpect(view().name("offers")).
                 andExpect(model().attributeExists("offers"));
+
     }
 
-//    @Test
-    @WithMockUser(username = "user", roles = {"USER",})
+    @Test
+    public void testGetAllOffersShouldRedirectToLogin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/offers/all")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(redirectedUrl("http://localhost/users/login"));
+    }
+
+    @Test
+    @WithMockUser(username = "user@gmail.com", roles = {"USER"})
     public void testGetOfferDetailsShouldWork() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/offers/1/details")).
-                andExpect(status().is3xxRedirection()).
+                andExpect(status().isOk()).
                 andExpect(model().attributeExists("offer")).
                 andExpect(view().name("details"));
     }
