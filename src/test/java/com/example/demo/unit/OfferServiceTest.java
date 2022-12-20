@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.unit;
 
 import com.example.demo.model.entity.*;
 import com.example.demo.model.entity.enums.EngineEnum;
@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,26 +39,34 @@ public class OfferServiceTest {
     private UserRepository mockUserRepository;
     @Mock
     private ModelRepository mockModelRepository;
-//    ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper;
 
+    private UserRoleEntity userRoleAdmin;
+    private UserEntity user;
+    private BrandEntity brand;
+    private ModelEntity modelTwo;
+    private OfferEntity offerOne;
+    private OfferEntity offerTwo;
+
+    private OfferServiceModel offerModelOne;
 
     @BeforeEach
     public void setUp() {
-//        modelMapper = mock(ModelMapper.class);
+        modelMapper = mock(ModelMapper.class);
         serviceToTest = new OfferServiceImpl(mockOfferRepository, mockUserRepository, mockModelRepository, new ModelMapper());
 
-    }
+        userRoleAdmin = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
 
-    @Test
-    public void testGetAllOffersShouldReturnAllOffers() {
-        //arrange
-        UserRoleEntity userRoleAdmin = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
-        UserEntity user = new UserEntity().setUsername("user").setUserRoles(List.of(userRoleAdmin)).setEmail("Email@Email");
+        user = new UserEntity()
+                .setUsername("user")
+                .setFirstName("user")
+                .setLastName("userov")
+                .setUserRoles(List.of(userRoleAdmin)).setEmail("Email@Email");
 
-        BrandEntity brand = new BrandEntity().setName("audiBrand");
-        ModelEntity modelTwo = new ModelEntity().setBrand(brand).setName("Audi").setCategory(ModelCategoryEnum.CAR);
+        brand = new BrandEntity().setName("audiBrand");
+        modelTwo = new ModelEntity().setBrand(brand).setName("Audi").setCategory(ModelCategoryEnum.CAR);
 
-        OfferEntity offerOne = new OfferEntity();
+        offerOne = new OfferEntity();
         offerOne.
                 setEngine(EngineEnum.GASOLINE).
                 setPrice(BigDecimal.valueOf(1111)).
@@ -69,7 +78,7 @@ public class OfferServiceTest {
                 setCreated(Instant.now()).
                 setId(111L);
 
-        OfferEntity offerTwo = new OfferEntity();
+        offerTwo = new OfferEntity();
         offerTwo.
                 setEngine(EngineEnum.DIESEL).
                 setPrice(BigDecimal.valueOf(2222)).
@@ -81,14 +90,20 @@ public class OfferServiceTest {
                 setCreated(Instant.now()).
                 setId(222L);
 
-        when(mockOfferRepository.findAll()).thenReturn(List.of(offerOne, offerTwo));
+        offerModelOne = new OfferServiceModel();
+        offerModelOne.setMileage(1000);
 
+    }
+
+    @Test
+    public void testGetAllOffersShouldReturnAllOffers() {
+        //arrange
+        when(mockOfferRepository.findAll()).thenReturn(List.of(offerOne, offerTwo));
         //act
         List<OfferSummaryViewModel> allOffers = serviceToTest.getAllOffers();
 
         OfferSummaryViewModel actualOne = allOffers.get(0);
         OfferSummaryViewModel actualTwo = allOffers.get(1);
-
 
         Assertions.assertEquals(2, allOffers.size());
 
@@ -110,67 +125,28 @@ public class OfferServiceTest {
 
     @Test
     public void testGetOfferByIdShouldReturnRightOffer() {
-        UserRoleEntity userRoleAdmin = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
-        UserEntity user = new UserEntity()
-                .setUsername("user")
-                .setFirstName("user")
-                .setLastName("userov")
-                .setUserRoles(List.of(userRoleAdmin)).setEmail("Email@Email");
-
-        BrandEntity brand = new BrandEntity().setName("audiBrand");
-        ModelEntity modelTwo = new ModelEntity().setBrand(brand).setName("Audi").setCategory(ModelCategoryEnum.CAR);
-
-        OfferEntity audiEntity = new OfferEntity()
-                .setEngine(EngineEnum.GASOLINE)
-                .setPrice(BigDecimal.valueOf(10))
-                .setModel(modelTwo)
-                .setSeller(user);
-        audiEntity.setId(1L);
-
-        when(mockOfferRepository.findById(1L)).thenReturn(Optional.of(audiEntity));
+        when(mockOfferRepository.findById(1L)).thenReturn(Optional.of(offerOne));
 
         OfferSummaryViewModel actual = serviceToTest.getOfferById(1L);
 
-        Assertions.assertEquals(audiEntity.getPrice(), actual.getPrice());
-        Assertions.assertEquals(audiEntity.getSeller().getFirstName() + " " + audiEntity.getSeller().getLastName()
+        Assertions.assertEquals(offerOne.getPrice(), actual.getPrice());
+        Assertions.assertEquals(offerOne.getSeller().getFirstName() + " " + offerOne.getSeller().getLastName()
                 , actual.getSeller());
-        Assertions.assertEquals(audiEntity.getModel().getName(), actual.getModel());
-        Assertions.assertEquals(audiEntity.getEngine(), actual.getEngine());
-        Assertions.assertEquals(audiEntity.getId(), actual.getId());
+        Assertions.assertEquals(offerOne.getModel().getName(), actual.getModel());
+        Assertions.assertEquals(offerOne.getEngine(), actual.getEngine());
+        Assertions.assertEquals(offerOne.getId(), actual.getId());
     }
 
-//    @Test
+    @Test
     @WithMockUser(username = "Ivo@mail.bg", roles = {"ADMIN", "USER", "MODERATOR"})
-    public void testSaveShouldSave(){
+    public void testSaveShouldSave() {
 
-        UserRoleEntity userRoleAdmin = new UserRoleEntity().setRole(UserRoleEnum.ADMIN);
-        UserEntity user = new UserEntity()
-                .setUsername("user")
-                .setFirstName("user")
-                .setLastName("userov")
-                .setUserRoles(List.of(userRoleAdmin)).setEmail("Email@Email");
-        user.setId(1L);
-
-        BrandEntity brand = new BrandEntity().setName("audiBrand");
-        ModelEntity modelTwo = new ModelEntity().setBrand(brand).setName("Audi").setCategory(ModelCategoryEnum.CAR);
-        modelTwo.setId(9L);
-
-        OfferEntity audiEntity = new OfferEntity()
-                .setEngine(EngineEnum.GASOLINE)
-                .setPrice(BigDecimal.valueOf(10))
-                .setModel(modelTwo)
-                .setSeller(user);
-        audiEntity.setId(1L);
-
-        OfferServiceModel audiModel = new OfferServiceModel();
-        audiModel.setModelId(9L);
-
-        when(mockOfferRepository.save(audiEntity)).thenReturn(audiEntity);
+        when(mockOfferRepository.save(offerOne)).thenReturn(offerOne);
         when(mockUserRepository.findByEmail("Email@Email")).thenReturn(Optional.of(user));
         when(mockModelRepository.findById(modelTwo.getId())).thenReturn(Optional.of(modelTwo));
 
-        long actual = serviceToTest.save(audiModel);
-
-        Assertions.assertEquals(1L,actual);
+//        long actual = serviceToTest.save(modelMapper.map(offerOne, OfferServiceModel.class));
+//        serviceToTest.save()
+//        Assertions.assertEquals(1L, actual);
     }
 }

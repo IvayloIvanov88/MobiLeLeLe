@@ -38,20 +38,23 @@ public class BrandServiceImpl implements BrandService {
 
         allModels.forEach(me -> {
             BrandEntity brandEntity = me.getBrand();
+
             Optional<BrandViewModel> brandViewModelOpt = findByName(result, brandEntity.getName());
+
             if (brandViewModelOpt.isEmpty()) {
                 BrandViewModel newBrandViewModel = new BrandViewModel();
                 modelMapper.map(brandEntity, newBrandViewModel);
                 result.add(newBrandViewModel);
                 brandViewModelOpt = Optional.of(newBrandViewModel);
             }
+
             ModelViewModel newModelViewModel = new ModelViewModel();
             modelMapper.map(me, newModelViewModel);
             brandViewModelOpt.get().addModel(newModelViewModel);
         });
+
         return result;
     }
-
 
 
     @Override
@@ -62,7 +65,9 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public long save(BrandAddServiceModel brandModel) {
         BrandEntity newBrand = modelMapper.map(brandModel, BrandEntity.class);
+
         ModelEntity newModel = new ModelEntity().setName(brandModel.getModel()).setBrand(newBrand);
+
         modelRepository.save(newModel);
 
         return brandRepository.save(newBrand).getId();
@@ -71,6 +76,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public long saveModel(ModelAddServiceModel model) {
         BrandEntity brand = brandRepository.findByName(model.getBrandName());
+
         ModelEntity newModel = new ModelEntity()
                 .setName(model.getName())
                 .setBrand(brand)
@@ -78,6 +84,7 @@ public class BrandServiceImpl implements BrandService {
                 .setImageUrl(model.getImageUrl())
                 .setStartYear(model.getStartYear())
                 .setEndYear(model.getEndYear());
+
         return modelRepository.save(newModel).getId();
     }
 

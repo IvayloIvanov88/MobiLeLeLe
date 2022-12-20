@@ -9,9 +9,7 @@ import com.example.demo.model.view.OfferSummaryViewModel;
 import com.example.demo.service.BrandService;
 import com.example.demo.service.OfferService;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,10 +52,12 @@ public class OfferController {
     @PostMapping("/add")
     public String addOffer(@Valid @ModelAttribute OfferServiceModel offerModel, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("offerModel", offerModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.offerModel",
                     bindingResult);
+
             return "redirect:/offers/add";
         }
 
@@ -74,9 +74,11 @@ public class OfferController {
     @GetMapping("/{id}/details")
     public String getOfferDetails(@PathVariable Long id, Model model) {
         OfferSummaryViewModel offerView = offerService.getOfferById(id);
+
         if (offerView == null) {
             return "redirect:/offers/add";
         }
+
         model.addAttribute("offer", offerView);
         return "details";
     }
@@ -86,9 +88,12 @@ public class OfferController {
     public String updateOffer(@PathVariable Long id, Model model) {
         OfferUpdateBindingModel updateBindingModel = modelMapper
                 .map(offerService.getOfferById(id), OfferUpdateBindingModel.class);
-        model.addAttribute("offerModel", updateBindingModel)
+
+        model
+                .addAttribute("offerModel", updateBindingModel)
                 .addAttribute("engines", EngineEnum.values())
                 .addAttribute("transmissions", TransmissionEnum.values());
+
         return "update";
     }
 
@@ -97,6 +102,7 @@ public class OfferController {
         model.
                 addAttribute("engines", EngineEnum.values()).
                 addAttribute("transmissions", TransmissionEnum.values());
+
         return "update";
     }
 

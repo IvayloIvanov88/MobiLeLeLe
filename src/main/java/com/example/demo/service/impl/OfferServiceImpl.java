@@ -33,6 +33,7 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public OfferSummaryViewModel getOfferById(Long id) {
         Optional<OfferEntity> offer = offerRepository.findById(id);
+
         return offer.map(this::map).orElse(null);
     }
 
@@ -45,6 +46,7 @@ public class OfferServiceImpl implements OfferService {
     public long save(OfferServiceModel model) {
         OfferEntity offerEntity = asNewEntity(model);
         OfferEntity newEntity = offerRepository.save(offerEntity);
+
         return newEntity.getId();
     }
 
@@ -79,6 +81,7 @@ public class OfferServiceImpl implements OfferService {
 
     private String userEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             return authentication.getName();
         }

@@ -3,7 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.model.entity.UserEntity;
 import com.example.demo.model.entity.UserRoleEntity;
 import com.example.demo.model.entity.enums.UserRoleEnum;
-import com.example.demo.model.entity.service.RoleServiceModel;
 import com.example.demo.model.service.UserLoginServiceModel;
 import com.example.demo.model.service.UserRegisterServiceModel;
 import com.example.demo.repository.UserRepository;
@@ -11,7 +10,6 @@ import com.example.demo.repository.UserRoleRepository;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,10 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.lang.String.valueOf;
 
 @Slf4j
 @Service
@@ -32,19 +27,20 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final ModelMapper modelMapper;
+//    private final ModelMapper modelMapper;
     private final RoleService roleService;
     private final String adminPass;
 
     public UserServiceImpl(UserRepository userRepository,
                            UserRoleRepository userRoleRepository,
                            @Lazy PasswordEncoder passwordEncoder,
-//                           UserDetailsService appUserDetailsService,
-                           ModelMapper modelMapper, RoleService roleService, @Value("${app.default.admin.password}") String adminPass) {
+//                           ModelMapper modelMapper,
+                           RoleService roleService,
+                           @Value("${app.default.admin.password}") String adminPass) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapper = modelMapper;
+//        this.modelMapper = modelMapper;
         this.roleService = roleService;
 //        this.appUserDetailsService = appUserDetailsService;
         this.adminPass = adminPass;
@@ -114,31 +110,6 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.matches(loginServiceModel.getPassword(), user.getPassword());
     }
 
-    //    @Override
-//    public void registerAndLogin(UserRegisterServiceModel userRegisterServiceModel) {
-//        UserEntity newUser =
-//                new UserEntity().
-//                        setEmail(userRegisterServiceModel.getEmail()).
-//                        setFirstName(userRegisterServiceModel.getFirstName()).
-//                        setLastName(userRegisterServiceModel.getLastName()).
-//                        setPassword(passwordEncoder.encode(userRegisterServiceModel.getPassword()));
-//
-//        userRepository.save(newUser);
-//
-//        UserDetails userDetails =
-//                appUserDetailsService.loadUserByUsername(newUser.getEmail());
-//
-//        Authentication auth =
-//                new UsernamePasswordAuthenticationToken(
-//                        userDetails,
-//                        userDetails.getPassword(),
-//                        userDetails.getAuthorities()
-//                );
-//
-//        SecurityContextHolder.
-//                getContext().
-//                setAuthentication(auth);
-//    }
     @Override
     public void register(UserRegisterServiceModel userRegisterServiceModel) {
 

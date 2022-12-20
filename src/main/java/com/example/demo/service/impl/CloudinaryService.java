@@ -20,13 +20,17 @@ public class CloudinaryService {
 
     public String uploadImage(MultipartFile multipartFile) throws IOException {
         File imgFile = File.createTempFile(TEMP_FILE_NAME, multipartFile.getOriginalFilename());
+
         multipartFile.transferTo(imgFile);
+
         String url = this.cloudinary.
                 uploader().
                 upload(imgFile, new HashMap<>()).
                 get("url").toString();
+
         //delete temporary file
         imgFile.delete();
+
         return url;
     }
 }

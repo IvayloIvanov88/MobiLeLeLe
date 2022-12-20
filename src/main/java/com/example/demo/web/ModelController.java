@@ -31,8 +31,10 @@ public class ModelController {
 
     @GetMapping("/add")
     public String addModel(Model model){
+
         model.addAttribute("brands", brandService.getAllBrands());
         model.addAttribute("category", ModelCategoryEnum.values());
+
         return "model-add";
     }
 
@@ -40,11 +42,13 @@ public class ModelController {
     @PostMapping("/add")
     public String addModel(@Valid @ModelAttribute ModelAddServiceModel model, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
+
         if(bindingResult.hasErrors()){
             redirectAttributes.addFlashAttribute("model", model);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.model", bindingResult);
             return "redirect:/models/add";
         }
+
         long newModelId = brandService.saveModel(model);
 
         return "redirect:/brands/" + newModelId + "/model-details";

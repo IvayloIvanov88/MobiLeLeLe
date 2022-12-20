@@ -4,10 +4,7 @@ import com.example.demo.model.binding.OfferUpdateBindingModel;
 import com.example.demo.model.entity.enums.EngineEnum;
 import com.example.demo.model.entity.enums.TransmissionEnum;
 import com.example.demo.model.service.BrandAddServiceModel;
-import com.example.demo.model.service.OfferServiceModel;
-import com.example.demo.model.service.OfferUpdateServiceModel;
 import com.example.demo.model.view.BrandViewModel;
-import com.example.demo.model.view.OfferSummaryViewModel;
 import com.example.demo.service.BrandService;
 import com.example.demo.service.OfferService;
 import lombok.AllArgsConstructor;
@@ -36,27 +33,31 @@ public class BrandsController {
     public BrandAddServiceModel brandModel() {
         return new BrandAddServiceModel();
     }
+
     @GetMapping("/all")
-    public String allBrands(Model model){
+    public String allBrands(Model model) {
         model.addAttribute("brands", brandService.getAllBrands());
         return "brands";
     }
 
     @GetMapping("/add")
-    public String addBrand(Model model){
+    public String addBrand(Model model) {
         return "brand-add";
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public String addBrand(@Valid @ModelAttribute BrandAddServiceModel brandModel, BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()){
+                           RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("brands", brandModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.brandModel", bindingResult);
             return "redirect:/brands/add";
         }
+
         long newBrand = brandService.save(brandModel);
+
         return "redirect:/brands/" + newBrand + "/brand-details";
     }
 
@@ -64,10 +65,13 @@ public class BrandsController {
     @GetMapping("/{id}/brand-details")
     public String getBrandDetails(@PathVariable Long id, Model model) {
         BrandViewModel brandView = brandService.getById(id);
+
         if (brandView == null) {
             return "redirect:/brands/add";
         }
+
         model.addAttribute("brands", brandView);
+
         return "brand-details";
     }
 
@@ -75,6 +79,7 @@ public class BrandsController {
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable long id, Model model) {
         brandService.delete(id);
+
         return "redirect:/brands/all";
     }
 
@@ -85,9 +90,11 @@ public class BrandsController {
 //        todo
         OfferUpdateBindingModel updateBindingModel = modelMapper
                 .map(offerService.getOfferById(id), OfferUpdateBindingModel.class);
+
         model.addAttribute("offerModel", updateBindingModel)
                 .addAttribute("engines", EngineEnum.values())
                 .addAttribute("transmissions", TransmissionEnum.values());
+
         return "brand-update";
     }
 
@@ -96,8 +103,10 @@ public class BrandsController {
         model.
                 addAttribute("engines", EngineEnum.values()).
                 addAttribute("transmissions", TransmissionEnum.values());
+
         return "brand-update";
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/update")
     public String updateBrand(@PathVariable Long id,

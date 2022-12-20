@@ -5,7 +5,6 @@ import com.example.demo.model.service.UserRegisterServiceModel;
 import com.example.demo.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,11 +54,11 @@ public class RegisterController {
                 boolean match = !defaultMessage.equals("Password don't match");
                 redirectAttributes.addFlashAttribute("passwordMatch", match);
             });
+
             return "redirect:/users/register";
         }
 
-        UserRegisterServiceModel serviceModel =
-                modelMapper.map(userModel, UserRegisterServiceModel.class);
+        UserRegisterServiceModel serviceModel = modelMapper.map(userModel, UserRegisterServiceModel.class);
 
         userService.register(serviceModel);
 
